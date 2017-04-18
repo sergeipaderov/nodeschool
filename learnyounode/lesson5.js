@@ -11,12 +11,20 @@
   Список файлов должен быть выведен в консоль построчно (каждый файл на
   новой строке). Так же необходимо использовать асинхронный I/O. */
 
-const fs = require('fs');
+var fs = require('fs'),
+  path = require('path'),
+   dir = process.argv[2],
+   ext = process.argv[3];
 
-const buf = fs.readdir('/path/to/dir/', function(err, list) {
-  if (err) {
-    console.log(err);
+function targetExt (ext, subject) {
+   return path.extname(subject).slice(1) === ext
   }
-  var str = buf.toString()
-  console.log(str.split('\n').length - 1);
-});
+  
+  fs.readdir(dir, function (err, files) {
+    if(err) {
+      console.error('Error: ', err)
+    } else {
+      var filteredArr = targetExt.bind(null, ext);
+      console.log(files.filter(filteredArr).join('\n'));
+    }
+  })
